@@ -39,6 +39,8 @@ public class PKCEClient {
         2. Criação do codeChallenge (RF02)
         3. Montagem da URL (RF04)
         */
+        baseUrl = baseUrl.replaceAll("/+$", "");
+        redirectUri = redirectUri.replaceAll("/+$", "");
         this.codeVerifier = codeGenerator.generateCodeVerifier();
         String codeChallenge = codeGenerator.generateCodeChallenge(codeVerifier);
         return String.format("%s?response_type=code&client_id=%s&redirect_uri=%s" +
