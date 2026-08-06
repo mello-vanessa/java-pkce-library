@@ -1,6 +1,6 @@
 package br.com.vanessacardoso.pkce;
 
-import br.com.vanessacardoso.pkce.internal.ICodeGenerator;
+import br.com.vanessacardoso.pkce.internal.CodeGenerator;
 import br.com.vanessacardoso.pkce.internal.impl.CodeGeneratorPlain;
 import br.com.vanessacardoso.pkce.internal.impl.CodeGeneratorS256;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class PKCEClient {
     private String codeVerifier;
-    private final ICodeGenerator codeGenerator;
+    private final CodeGenerator codeGenerator;
     private final PKCEMethod pkceMethod;
 
     public PKCEClient() {

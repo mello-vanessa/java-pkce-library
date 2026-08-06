@@ -2,7 +2,7 @@ package br.com.vanessacardoso.pkce.internal;
 
 import java.security.SecureRandom;
 
-public abstract class ACodeGenerator implements ICodeGenerator{
+public abstract class AbstractCodeGenerator implements CodeGenerator {
     @Override
     public String generateCodeVerifier(){
         SecureRandom numeroRandom = new SecureRandom();

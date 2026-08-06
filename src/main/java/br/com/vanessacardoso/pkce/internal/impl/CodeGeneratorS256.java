@@ -1,13 +1,13 @@
 package br.com.vanessacardoso.pkce.internal.impl;
 
-import br.com.vanessacardoso.pkce.internal.ACodeGenerator;
+import br.com.vanessacardoso.pkce.internal.AbstractCodeGenerator;
 import br.com.vanessacardoso.pkce.internal.Base64Encoder;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class CodeGeneratorS256 extends ACodeGenerator {
+public class CodeGeneratorS256 extends AbstractCodeGenerator {
 
     @Override
     public String generateCodeChallenge(String codeVerifier){

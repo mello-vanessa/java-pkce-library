@@ -1,7 +1,7 @@
 package br.com.vanessacardoso.pkce.internal.impl;
 
-import br.com.vanessacardoso.pkce.internal.ACodeGenerator;
-public class CodeGeneratorPlain extends ACodeGenerator {
+import br.com.vanessacardoso.pkce.internal.AbstractCodeGenerator;
+public class CodeGeneratorPlain extends AbstractCodeGenerator {
     @Override
     public String generateCodeChallenge(String codeVerifier) {
         return codeVerifier;
