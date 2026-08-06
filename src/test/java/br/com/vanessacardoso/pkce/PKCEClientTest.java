@@ -55,7 +55,7 @@ public class PKCEClientTest {
         assertEquals(codeChallenge, "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM");
     }
     @Test
-    void checkCodeChallengeMethodAppendixBRf04(){
+    void checkRF04CodeChallengeMethodAppendixB(){
         String url = client.generateAuthorizationUrl(baseUrl,clientId, redirectUri);
         assertTrue(url.contains("code_challenge="));
         assertTrue(url.contains("code_challenge_method=S256"));
