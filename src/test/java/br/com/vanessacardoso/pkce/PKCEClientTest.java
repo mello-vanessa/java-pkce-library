@@ -25,13 +25,27 @@ public class PKCEClientTest {
     /*
     RF01 (Entropia): Verificar se o code_verifier gerado possui entre 43 e 128 caracteres e se utiliza apenas
     caracteres não reservados
+    https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
+    code_verifier = dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+    https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
+    code_challenge = E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+    code_challenge_method=S256
      */
     @Test
+    void checkRF01CodeVerifierAppendixB(){
+        byte[] data = {
+            (byte)116, (byte)24, (byte)223, (byte)180, (byte)151, (byte)153,
+                    (byte)224, (byte)37, (byte)79, (byte)250, (byte)96, (byte)125,
+                    (byte)216, (byte)173, (byte)187, (byte)186, (byte)22, (byte)212,
+                    (byte)37, (byte)77, (byte)105, (byte)214, (byte)191, (byte)240,
+                    (byte)91, (byte)88, (byte)5, (byte)88, (byte)83, (byte)132,
+                    (byte)141, (byte)121
+        };
+        String codeVerifier = Base64Encoder.encodeUrlSafe(data);
+        assertEquals(codeVerifier, "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk");
+    }
+    @Test
     void checkRF01CodeChallengeAppendixB(){
-        // code_verifier = dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
-        // https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
-        // code_challenge = E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
-        // code_challenge_method=S256
         String codeVerifier = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
         String codeChallenge = codeGeneratorS256.generateCodeChallenge(codeVerifier);
         assertEquals(codeChallenge, "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM");
