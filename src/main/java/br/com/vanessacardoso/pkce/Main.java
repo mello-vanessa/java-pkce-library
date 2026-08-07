@@ -11,33 +11,18 @@ import java.util.Base64;
 
 public class Main {
     public static void main(String[] args)  {
-        SecureRandom numeroRandom = new SecureRandom();
-        byte[] bytes = new byte[32];
-        numeroRandom.nextBytes(bytes); //gerando conjunto bruto de bytes
-        System.out.println("SecureRandom: "+Arrays.toString(bytes));//visualizando ele
+        PKCEClient client = new PKCEClient();
+        String keycloakAuthUrl = "http://localhost:8080/realms/meu-realm/protocol/openid-connect/auth";
+        String clientId = "minha-app-spa";
+        String redirectUri = "http://localhost:3000/callback";
 
-        /*
-        getUrlEncoder: Retorna um valor Base64.Encoderque codifica usando o esquema de codificação
-        base64 seguro para URLs e nomes de arquivos .
-         */
-        String codeVerifier = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-        /*
-        withoutPadding().encodeToString() é na Base64.encoder
-        withoutPadding():Retorna uma instância de codificador que codifica de forma equivalente a esta,
-        mas sem adicionar nenhum caractere de preenchimento ao final dos dados de byte codificados.
-        encodeToString(): Codifica a matriz de bytes especificada em uma String usando o Base64 esquema de codificação.
-         */
-        System.out.println("Code Verifier: "+codeVerifier);
-        //passar o tipo de algoritmo que eu vou usar
-        try{
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            //Criar o code challenge
-            byte[] codeChallengeBytes = md.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
-            String codeChallenge = Base64.getUrlEncoder().withoutPadding().encodeToString(codeChallengeBytes);
-            System.out.println("Code Challenge: "+codeChallenge);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        String authUrl = client.generateAuthorizationUrl(keycloakAuthUrl, clientId, redirectUri);
+        String codeVerifier = client.getCodeVerifier();
 
+        System.out.println("=== Validação Experimental PKCE ===");
+        System.out.println("Base URL: " + keycloakAuthUrl);
+        System.out.println("Client ID: " + clientId);
+        System.out.println("[RF01/RF05] Code Verifier Gerado: "+codeVerifier);
+        System.out.println("[RF04] URL de Autorização Pronta para Redirecionamento:"+authUrl);
     }
 }
