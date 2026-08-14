@@ -1,9 +1,10 @@
 plugins {
     id("java")
+    id("maven-publish")
 }
 
 group = "br.com.vanessacardoso.pkce"
-version = "1.0-SNAPSHOT"
+version = "1.3"
 
 repositories {
     mavenCentral()
@@ -16,4 +17,12 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
 }
