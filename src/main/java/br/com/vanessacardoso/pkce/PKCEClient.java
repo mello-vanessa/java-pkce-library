@@ -28,6 +28,17 @@ public class PKCEClient {
         }
         this.httpClientAdapter = new JavaHttpClientAdapter();
     }
+    public PKCEClient(HttpClientAdapter httpClientAdapter) {
+        this.pkceMethod = loadMethodFromProperties();
+
+        if (this.pkceMethod == PKCEMethod.PLAIN) {
+            this.codeGenerator = new CodeGeneratorPlain();
+        } else {
+            this.codeGenerator = new CodeGeneratorS256();
+        }
+
+        this.httpClientAdapter = httpClientAdapter;
+    }
     private PKCEMethod loadMethodFromProperties() {
         Properties prop = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("pkce.properties")) {
@@ -49,6 +60,7 @@ public class PKCEClient {
         return String.format("%s?response_type=code&client_id=%s&redirect_uri=%s" +
                 "&code_challenge=%s&code_challenge_method=%s", baseUrl, clientId, redirectUri,codeChallenge, this.pkceMethod.getValue());
     }
+
     public String getCodeVerifier(){
         return this.codeVerifier;
     }
