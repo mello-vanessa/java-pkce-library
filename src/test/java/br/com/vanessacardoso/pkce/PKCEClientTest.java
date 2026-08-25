@@ -1,6 +1,7 @@
 package br.com.vanessacardoso.pkce;
 
 import br.com.vanessacardoso.pkce.internal.Base64Encoder;
+import br.com.vanessacardoso.pkce.internal.HttpClientAdapter;
 import br.com.vanessacardoso.pkce.internal.impl.CodeGeneratorS256;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,8 @@ public class PKCEClientTest {
     private String baseUrl;
     private String clientId;
     private String redirectUri;
+    private String tokenUri;
+    private String authorizationCode;
     private CodeGeneratorS256 codeGeneratorS256;
     @BeforeEach
     void setUp(){
@@ -20,6 +23,8 @@ public class PKCEClientTest {
         baseUrl = "https://server.com/authorize";
         clientId = "my-client-id";
         redirectUri = "https://app.com/callback";
+        tokenUri = "https://server.com/token";
+        authorizationCode = "my-auth-code";
         codeGeneratorS256 = new CodeGeneratorS256();
     }
     /*
@@ -91,9 +96,24 @@ public class PKCEClientTest {
     @Test
     void shouldStoreCodeVerifierAfterGeneratingUrl(){
         assertNull(client.getCodeVerifier());
-        String url = client.generateAuthorizationUrl(baseUrl,clientId,redirectUri);
+        client.generateAuthorizationUrl(baseUrl,clientId,redirectUri);
         String codeVerifier = client.getCodeVerifier();
         assertNotNull(codeVerifier);
         assertFalse(codeVerifier.isBlank());
+    }
+    @Test
+    void shouldExchangeTokenSuccessfully(){
+        HttpClientAdapter fakeHttpClient = new FakeHttpClientAdapter();
+        PKCEClient pkceClientFake = new PKCEClient(fakeHttpClient);
+        pkceClientFake.generateAuthorizationUrl(baseUrl, clientId, redirectUri);
+        String token = pkceClientFake.getToken(authorizationCode,clientId,redirectUri,tokenUri);
+        assertTrue(token.contains("fake-token"));
+    }
+
+    private static class FakeHttpClientAdapter implements HttpClientAdapter {
+        @Override
+        public String postRequest(String url, String body, String headerName, String headerValue) {
+            return "{\"access_token\":\"fake-token\"}";
+        }
     }
 }
