@@ -17,10 +17,9 @@ public class JavaHttpClientAdapter implements HttpClientAdapter {
             ).POST(HttpRequest.BodyPublishers.ofString(body)).build();
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() != 200) {
-                throw new RuntimeException("Erro HTTP: "+response.statusCode()+"-"+response.body());
+            if (response.statusCode() == 200) {
+                System.out.println("PKCE VALIDADO COM SUCESSO!");
             }
-            System.out.println("PKCE VALIDADO COM SUCESSO!");
             return response.body();
 
         } catch (IOException | InterruptedException e) {

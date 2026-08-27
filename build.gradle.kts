@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "br.com.vanessacardoso.pkce"
-version = "1.3"
+version = "1.0"
 
 repositories {
     mavenCentral()
