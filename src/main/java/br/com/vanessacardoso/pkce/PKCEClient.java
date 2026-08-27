@@ -41,17 +41,29 @@ public class PKCEClient {
     }
     private PKCEMethod loadMethodFromProperties() {
         Properties prop = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("pkce.properties")) {
+        ClassLoader classLoader =  Thread.currentThread().getContextClassLoader();
+
+        if (classLoader == null){
+            classLoader = getClass().getClassLoader();
+        }
+
+        try (InputStream input = classLoader.getResourceAsStream("pkce.properties")) {
             if (input != null) {
                 prop.load(input);
                 String methodStr = prop.getProperty("pkce.method");
-                return PKCEMethod.valueOf(methodStr.toUpperCase());
+                if(methodStr != null && !methodStr.trim().isEmpty()){
+                    System.out.println("[PKCE] Método: " + PKCEMethod.valueOf(methodStr.toUpperCase()));
+                    return PKCEMethod.valueOf(methodStr.toUpperCase());
+                }
             }
+        } catch (IllegalArgumentException e) {
+            System.out.println("[PKCE] Método inválido. Utilizando S256.");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return PKCEMethod.S256;
     }
+
     public String generateAuthorizationUrl(String baseUrl, String clientId, String redirectUri){
         baseUrl = baseUrl.replaceAll("/+$", "");
         redirectUri = redirectUri.replaceAll("/+$", "");
