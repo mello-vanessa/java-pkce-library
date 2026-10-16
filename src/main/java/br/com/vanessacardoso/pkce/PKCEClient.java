@@ -44,22 +44,16 @@ public class PKCEClient {
         Properties prop = new Properties();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-        if (classLoader == null) {
-            classLoader = getClass().getClassLoader();
-        }
-
         try (InputStream input = classLoader.getResourceAsStream("pkce.properties")) {
 
             if (input != null) {
                 prop.load(input);
                 String methodStr = prop.getProperty("pkce.method");
-
                 // Propriedade ausente ou vazia
                 if (methodStr == null || methodStr.trim().isEmpty()) {
                     System.out.println("[PKCE] Método não informado. Utilizando S256.");
                     return PKCEMethod.S256;
                 }
-
                 PKCEMethod method = PKCEMethod.valueOf(methodStr.trim().toUpperCase(java.util.Locale.ROOT));
                 System.out.println("[PKCE] Método: " + method);
                 return method;
@@ -68,14 +62,11 @@ public class PKCEClient {
                 // Arquivo ausente
                 System.out.println("[PKCE] Arquivo pkce.properties ausente. Utilizando S256.");
             }
-
         } catch (IllegalArgumentException e) {
             System.out.println("[PKCE] Método inválido. Utilizando S256.");
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
         return PKCEMethod.S256;
     }
 
